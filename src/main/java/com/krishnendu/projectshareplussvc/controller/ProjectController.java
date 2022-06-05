@@ -7,9 +7,9 @@ import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
 
-@CrossOrigin(value="http://localhost:3000")
 @RestController
 @RequestMapping("/api/v1/post")
+@CrossOrigin
 public class ProjectController {
     private final IProjectService _postService;
 

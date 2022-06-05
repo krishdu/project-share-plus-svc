@@ -11,6 +11,9 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.stream.Collectors;
 
+/**
+ * contract class for Project service
+ */
 @Service
 public class ProjectService  implements IProjectService {
     private final IProjectEntityRepository _postRepository;
