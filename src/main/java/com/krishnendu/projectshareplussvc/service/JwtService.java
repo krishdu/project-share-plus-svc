@@ -51,7 +51,7 @@ public class JwtService implements UserDetailsService {
             BeanUtils.copyProperties(userEntity, userModel);
 
             return new AuthenticationResponse(
-                    userModel, newJwtToken
+                    userModel, newJwtToken, "Token Generated successfully"
             );
     }
 
@@ -60,7 +60,7 @@ public class JwtService implements UserDetailsService {
         UserEntity userEntity = _userRepository.findByAttributeUserEmail(username);
         if(userEntity != null) {
             return new org.springframework.security.core.userdetails.User(
-                    userEntity.getUserEmail(),
+                    userEntity.getUserId(),
                     userEntity.getPassword(),
                     new HashSet<>() //later we can add authorize role for every user
             );
@@ -68,6 +68,21 @@ public class JwtService implements UserDetailsService {
             throw new UsernameNotFoundException("User Email is not valid");
         }
     }
+
+    public UserDetails loadUserByUserId(String userId) throws UsernameNotFoundException {
+        UserEntity userEntity = _userRepository.findById(userId)
+                                                .orElseThrow(() -> new UsernameNotFoundException("Not a valid user"));
+
+        return new org.springframework.security.core.userdetails.User(
+                userEntity.getUserId(),
+                userEntity.getPassword(),
+                new HashSet<>() //later we can add authorize role for every user
+        );
+
+    }
+
+
+
 
 //    private void authenticate(String userName, String userPassword) throws Exception {
 //        try {

@@ -28,13 +28,13 @@ public class JwtRequestFilter extends OncePerRequestFilter {
     @Override
     protected void doFilterInternal(HttpServletRequest request, HttpServletResponse response, FilterChain filterChain) throws ServletException, IOException {
         final String authorizationHeader = request.getHeader("Authorization");
-        String userName = null;
+        String userId = null;
         String jwtToken = null;
 
         if(authorizationHeader != null && authorizationHeader.startsWith("Bearer ")) {
             jwtToken = authorizationHeader.substring(7);
             try{
-                userName =_jwtTokenUtils.extractUsername(jwtToken);
+                userId =_jwtTokenUtils.extractUsername(jwtToken);
             }catch(IllegalArgumentException e){
                 System.out.println("Unable to get Jwt token");
             }
@@ -47,8 +47,8 @@ public class JwtRequestFilter extends OncePerRequestFilter {
             System.out.println("Jwt token does not start with Bearer");
         }
 
-        if(userName != null && SecurityContextHolder.getContext().getAuthentication() == null) {
-            UserDetails userDetails = _jwtService.loadUserByUsername(userName);
+        if(userId != null && SecurityContextHolder.getContext().getAuthentication() == null) {
+            UserDetails userDetails = _jwtService.loadUserByUserId(userId);
             if(_jwtTokenUtils.validateToken(jwtToken, userDetails)){
                 UsernamePasswordAuthenticationToken usernamePasswordAuthenticationToken =
                         new UsernamePasswordAuthenticationToken(

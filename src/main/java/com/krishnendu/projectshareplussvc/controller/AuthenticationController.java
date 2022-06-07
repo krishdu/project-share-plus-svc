@@ -3,8 +3,10 @@ package com.krishnendu.projectshareplussvc.controller;
 import com.krishnendu.projectshareplussvc.model.AuthenticationResponse;
 import com.krishnendu.projectshareplussvc.service.JwtService;
 import com.krishnendu.projectshareplussvc.model.AuthenticationRequest;
+import com.krishnendu.projectshareplussvc.service.interfaces.IUserService;
 import com.krishnendu.projectshareplussvc.utils.JwtUtils;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.BadCredentialsException;
@@ -16,10 +18,10 @@ import org.springframework.web.bind.annotation.*;
 @RequestMapping("/api/v1")
 public class AuthenticationController {
     @Autowired
-    private JwtService _jwtService;
+    private AuthenticationManager _authenticationManager;
 
     @Autowired
-    private AuthenticationManager _authenticationManager;
+    private IUserService _userService;
 
     /**
      * endpoint to generate JWT token
@@ -32,12 +34,19 @@ public class AuthenticationController {
         try {
             _authenticationManager.authenticate(new UsernamePasswordAuthenticationToken(authenticationRequest.getUserEmail(), authenticationRequest.getPassword()));
         }catch (DisabledException e) {
-            throw new Exception("User is Disabled");
+//            throw new Exception("User is Disabled");
+            return ResponseEntity
+                    .status(HttpStatus.BAD_REQUEST)
+                    .body(new AuthenticationResponse(null, null, "User is Disabled"));
         }catch (BadCredentialsException e) {
-            throw new Exception("Bad credentials from user");
+            //throw new Exception("Bad credentials from user");
+            return ResponseEntity
+                    .status(HttpStatus.UNAUTHORIZED)
+                    .body(new AuthenticationResponse(null, null, "Bad credentials from user"));
         }
 
-       return ResponseEntity.ok(_jwtService.generateJwtToken(authenticationRequest));
+       //return ResponseEntity.ok(_jwtService.generateJwtToken(authenticationRequest));
+        return _userService.loginUser(authenticationRequest);
     }
 
 }

@@ -1,7 +1,8 @@
 package com.krishnendu.projectshareplussvc.utils;
 
+
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Component;
-import org.springframework.stereotype.Service;
 import io.jsonwebtoken.Claims;
 import io.jsonwebtoken.Jwts;
 import io.jsonwebtoken.SignatureAlgorithm;
@@ -14,8 +15,11 @@ import java.util.function.Function;
 
 @Component
 public class JwtUtils {
-    private static final String SECRET_KEY = "secretkeyyyyyy";
-    private static final int TOKEN_VALIDITY = 3600 * 5;
+    @Value("${JWT_SECRET_KEY}")
+    private String SECRET_KEY;
+
+    @Value("${JWT_TOKEN_VALIDITY}")
+    private String TOKEN_VALIDITY;
 
     public String extractUsername(String token) {
         return extractClaim(token, Claims::getSubject);
@@ -44,12 +48,11 @@ public class JwtUtils {
     }
 
     private String createToken(Map<String, Object> claims, String subject) {
-
         return Jwts.builder()
                 .setClaims(claims)
                 .setSubject(subject)
                 .setIssuedAt(new Date(System.currentTimeMillis()))
-                .setExpiration(new Date(System.currentTimeMillis() + 1000 * TOKEN_VALIDITY))
+                .setExpiration(new Date(System.currentTimeMillis() + 3600 * 1000 * Integer.parseInt(TOKEN_VALIDITY)))
                 .signWith(SignatureAlgorithm.HS256, SECRET_KEY).compact();
     }
 
