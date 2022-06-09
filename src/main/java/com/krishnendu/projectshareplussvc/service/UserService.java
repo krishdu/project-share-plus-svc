@@ -29,6 +29,12 @@ public class UserService  implements IUserService {
     @Autowired
     private CookieUtil _cookieUtil;
 
+    /**
+     * service method to register user
+     * @param user
+     * @return
+     * @throws Exception
+     */
     @Override
     public ResponseEntity<User> registerUser(User user) throws Exception {
         try {
@@ -44,6 +50,12 @@ public class UserService  implements IUserService {
         return ResponseEntity.status(HttpStatus.CREATED).body(user);
     }
 
+    /**
+     * service method to login user
+     * @param authenticationRequest
+     * @return AuthenticationResponse
+     * @throws Exception jwt exception
+     */
     @Override
     public ResponseEntity<AuthenticationResponse> loginUser(AuthenticationRequest authenticationRequest) throws Exception {
         AuthenticationResponse tokenCreationResponse = _jwtService.generateJwtToken(authenticationRequest);
