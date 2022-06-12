@@ -61,7 +61,7 @@ public class UserService  implements IUserService {
         AuthenticationResponse tokenCreationResponse = _jwtService.generateJwtToken(authenticationRequest);
         HttpHeaders responseHeaders = new HttpHeaders();
         addAccessTokenCookie(responseHeaders, tokenCreationResponse.getJwtToken());
-        return ResponseEntity.ok().headers(responseHeaders).body(tokenCreationResponse);
+        return ResponseEntity.status(HttpStatus.OK).headers(responseHeaders).body(tokenCreationResponse);
     }
 
     private void addAccessTokenCookie(HttpHeaders httpHeaders, String token) {

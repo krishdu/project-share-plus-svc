@@ -22,3 +22,14 @@ This repository contains the backend services (using Spring Boot) for [Project S
 + spring.servlet.multipart.file-size-threshold=2KB
 + spring.servlet.multipart.max-file-size=200MB
 + spring.servlet.multipart.max-request-size=215MB
+ 
++ JWT_SECRET_KEY=XXXXXXXXXXXXX
++ JWT_TOKEN_VALIDITY=5
++ 
++ ACCESS_TOKEN_NAME=XXXXX
++ ACCESS_TOKEN_VALIDITY=5
++ UI_HOST_URL=XXXXXXXXXX
+```
+
+```
+[Know More (👆)](https://github.com/krishdu/project-share-plus-spa)

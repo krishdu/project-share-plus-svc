@@ -13,6 +13,7 @@ public class CookieUtil {
     @Value("${ACCESS_TOKEN_VALIDITY}")
     private String accessTokenCookieValidity;
 
+
     public HttpCookie createAccessTokenCookie(String token) {
         return ResponseCookie.from(accessTokenCookieName, token)
                 .maxAge(3600 * Integer.parseInt(accessTokenCookieValidity))

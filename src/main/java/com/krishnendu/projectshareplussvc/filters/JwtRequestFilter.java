@@ -33,21 +33,26 @@ public class JwtRequestFilter extends OncePerRequestFilter {
 
     @Override
     protected void doFilterInternal(HttpServletRequest request, HttpServletResponse response, FilterChain filterChain) throws ServletException, IOException {
-        Cookie[] cookies = request.getCookies();
-
+//        Cookie[] cookies = request.getCookies();
+//
+//        String userId = null;
+//        String jwtToken = null;
+//
+//        if (cookies != null) {
+//            jwtToken = Arrays.stream(request.getCookies())
+//                    .filter(c -> c.getName().equals(accessTokenCookieName))
+//                    .findFirst()
+//                    .map(Cookie::getValue)
+//                    .orElse(null);
+//        }
+        final String authorizationHeader = request.getHeader("Authorization");
         String userId = null;
         String jwtToken = null;
 
-        if (cookies != null) {
-            jwtToken = Arrays.stream(request.getCookies())
-                    .filter(c -> c.getName().equals(accessTokenCookieName))
-                    .findFirst()
-                    .map(Cookie::getValue)
-                    .orElse(null);
-        }
 
-        if(jwtToken != null) {
+        if(authorizationHeader != null && authorizationHeader.startsWith("Bearer ")) {
             try{
+                jwtToken = authorizationHeader.substring(7);
                 userId =_jwtTokenUtils.extractUsername(jwtToken);
             }catch(IllegalArgumentException e){
                 System.out.println("Unable to get Jwt token");
