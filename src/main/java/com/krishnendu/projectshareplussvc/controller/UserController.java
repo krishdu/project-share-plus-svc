@@ -4,8 +4,11 @@ import com.krishnendu.projectshareplussvc.model.User;
 import com.krishnendu.projectshareplussvc.service.interfaces.IUserService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.core.Authentication;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.web.bind.annotation.*;
+
+import javax.servlet.http.HttpServletRequest;
 
 @RestController
 @RequestMapping("/api/v1/user")
@@ -28,6 +31,11 @@ public class UserController {
     public ResponseEntity<User> createNewUser(@RequestBody User user) throws Exception {
         user.setPassword(getEncodedPassword(user.getPassword()));
         return _userService.registerUser(user);
+    }
+
+    @GetMapping("/me")
+    public ResponseEntity<User> getMyDetails(Authentication auth) {
+        return _userService.getMyDetails();
     }
 
     /**

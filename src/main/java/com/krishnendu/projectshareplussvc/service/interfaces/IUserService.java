@@ -9,4 +9,6 @@ public interface IUserService {
     ResponseEntity<User> registerUser(User user) throws Exception;
 
     ResponseEntity<AuthenticationResponse> loginUser(AuthenticationRequest authenticationRequest) throws Exception;
+
+    ResponseEntity<User> getMyDetails();
 }

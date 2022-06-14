@@ -5,6 +5,7 @@ import com.krishnendu.projectshareplussvc.model.AuthenticationRequest;
 import com.krishnendu.projectshareplussvc.model.AuthenticationResponse;
 import com.krishnendu.projectshareplussvc.model.User;
 import com.krishnendu.projectshareplussvc.repository.interfaces.IUserEntityRepository;
+import com.krishnendu.projectshareplussvc.service.interfaces.IAuthenticationFacade;
 import com.krishnendu.projectshareplussvc.service.interfaces.IUserService;
 import com.krishnendu.projectshareplussvc.utils.CookieUtil;
 import org.springframework.beans.BeanUtils;
@@ -12,6 +13,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.stereotype.Service;
 
 /**
@@ -28,6 +30,9 @@ public class UserService  implements IUserService {
 
     @Autowired
     private CookieUtil _cookieUtil;
+
+    @Autowired
+    private IAuthenticationFacade _authenticationFacade;
 
     /**
      * service method to register user
@@ -62,6 +67,16 @@ public class UserService  implements IUserService {
         HttpHeaders responseHeaders = new HttpHeaders();
         addAccessTokenCookie(responseHeaders, tokenCreationResponse.getJwtToken());
         return ResponseEntity.status(HttpStatus.OK).headers(responseHeaders).body(tokenCreationResponse);
+    }
+
+    @Override
+    public ResponseEntity<User> getMyDetails() {
+        try{
+            User user = _authenticationFacade.getUserFromRequestPipeline();
+            return ResponseEntity.status(HttpStatus.OK).body(user);
+        }catch (UsernameNotFoundException e) {
+            return ResponseEntity.status(HttpStatus.NOT_FOUND).body(null);
+        }
     }
 
     private void addAccessTokenCookie(HttpHeaders httpHeaders, String token) {
