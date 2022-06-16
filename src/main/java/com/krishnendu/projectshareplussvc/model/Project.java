@@ -4,6 +4,8 @@ import lombok.Builder;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
+import java.util.Date;
+
 @Data
 @Builder
 @NoArgsConstructor
@@ -11,12 +13,31 @@ import lombok.NoArgsConstructor;
 
 public class Project {
 
-    private String id;
-    private String post;
-    private String name;
-    private String email;
+    /**
+     * project Id
+     */
+    private String postId;
+    /**
+     * project description
+     */
+    private String description;
+    /**
+     * image stored in  db
+     */
     private String image;
+    /**
+     * file received from request pipeline
+     */
     private String file;
-    private String profilePic;
-    private String timeStamp;
+    /**
+     * user profile picture
+     */
+    private String avatar;
+    /**
+     * owner of the project
+     */
+    private String owner;
+
+    private Date createDate;
+    private Date modifyDate;
 }

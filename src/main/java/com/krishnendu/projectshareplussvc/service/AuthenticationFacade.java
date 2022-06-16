@@ -34,4 +34,20 @@ public class AuthenticationFacade implements IAuthenticationFacade{
         BeanUtils.copyProperties(userEntity, authenticatedUser);
         return authenticatedUser;
     }
+
+    /**
+     * method to get the raw UserDetails (spring Security model)
+     * @return UserDetails
+     */
+    @Override
+    public UserEntity getUserEntityFromRequestPipeline() {
+        Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
+
+        UserDetails userDetails = (UserDetails) authentication.getPrincipal();
+
+        UserEntity userEntity = _userRepository.findById(userDetails.getUsername())
+                .orElseThrow(() -> new UsernameNotFoundException("Something went wrong, please login again"));
+
+        return userEntity;
+    }
 }

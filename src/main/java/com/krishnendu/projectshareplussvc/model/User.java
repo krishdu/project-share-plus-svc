@@ -22,6 +22,14 @@ public class User {
     private String lastName;
     private String userEmail;
     private String password;
+    /**
+     * profile picture
+     */
+    private String avatar;
+    /**
+     * profile picture file coming from request pipeline
+     */
+    private String avatarFile;
     private Date createDate;
     private Date modifyDate;
 }

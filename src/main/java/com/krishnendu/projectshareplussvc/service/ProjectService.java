@@ -1,10 +1,13 @@
 package com.krishnendu.projectshareplussvc.service;
 
 import com.krishnendu.projectshareplussvc.entity.ProjectEntity;
+import com.krishnendu.projectshareplussvc.entity.UserEntity;
 import com.krishnendu.projectshareplussvc.model.Project;
 import com.krishnendu.projectshareplussvc.repository.interfaces.IProjectEntityRepository;
+import com.krishnendu.projectshareplussvc.service.interfaces.IAuthenticationFacade;
 import com.krishnendu.projectshareplussvc.service.interfaces.IProjectService;
 import org.springframework.beans.BeanUtils;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import java.util.ArrayList;
@@ -22,12 +25,17 @@ public class ProjectService  implements IProjectService {
         _postRepository = postRepository;
     }
 
+    @Autowired
+    private IAuthenticationFacade _authenticationFacade;
+
     @Override
     public Project addPost(Project post) throws Exception {
         try {
+            UserEntity userEntity = _authenticationFacade.getUserEntityFromRequestPipeline();
+
             ProjectEntity postEntity = new ProjectEntity();
             BeanUtils.copyProperties(post, postEntity);
-
+            postEntity.setUser(userEntity);
             if(post.getFile() != null && !post.getFile().equalsIgnoreCase("null")) {
                 postEntity.setImage(post.getFile());
             }else {
@@ -35,7 +43,7 @@ public class ProjectService  implements IProjectService {
             }
 
             postEntity = _postRepository.save(postEntity);
-            post.setId(postEntity.getId());
+            post.setPostId(postEntity.getPostId());
             post.setFile(null);
             post.setImage(postEntity.getImage());
 
@@ -53,13 +61,13 @@ public class ProjectService  implements IProjectService {
         posts = postEntities.stream()
                 .map((postEntity) ->
                         Project.builder()
-                                .id(postEntity.getId())
-                                .timeStamp(postEntity.getTimeStamp())
-                                .email(postEntity.getEmail())
-                                .name(postEntity.getName())
-                                .post(postEntity.getPost())
+                                .postId(postEntity.getPostId())
+                                .description(postEntity.getDescription())
                                 .image(postEntity.getImage())
-                                .profilePic(postEntity.getProfilePic())
+                                .owner(postEntity.getUser().getFirstName() +" "+postEntity.getUser().getLastName())
+                                .avatar(postEntity.getUser().getAvatar())
+                                .createDate(postEntity.getCreateDate())
+                                .modifyDate(postEntity.getModifyDate())
                                 .build()
                 ).collect(Collectors.toList());
 

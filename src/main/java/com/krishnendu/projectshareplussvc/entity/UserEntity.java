@@ -8,6 +8,7 @@ import org.hibernate.annotations.GenericGenerator;
 
 import javax.persistence.*;
 import java.util.Date;
+import java.util.List;
 
 @Entity
 @Table(name = "user")
@@ -26,6 +27,13 @@ public class UserEntity {
     private String firstName;
     private String lastName;
     private String password;
+
+    @Column(nullable = true)
+    private String avatar;
+
+    @OneToMany(fetch = FetchType.LAZY, mappedBy = "user")
+    private List<ProjectEntity> projects;
+
     private Date createDate;
     private Date modifyDate;
 
