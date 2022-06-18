@@ -3,6 +3,7 @@ package com.krishnendu.projectshareplussvc.controller;
 import com.krishnendu.projectshareplussvc.model.User;
 import com.krishnendu.projectshareplussvc.service.interfaces.IUserService;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.crypto.password.PasswordEncoder;
@@ -27,8 +28,8 @@ public class UserController {
      * @return user
      * @throws Exception any-type of jpa exception
      */
-    @PostMapping("/new")
-    public ResponseEntity<User> createNewUser(@RequestBody User user) throws Exception {
+    @RequestMapping(value = "/new", method = RequestMethod.POST, consumes = MediaType.MULTIPART_FORM_DATA_VALUE)
+    public ResponseEntity<User> createNewUser(@ModelAttribute User user) throws Exception {
         user.setPassword(getEncodedPassword(user.getPassword()));
         return _userService.registerUser(user);
     }

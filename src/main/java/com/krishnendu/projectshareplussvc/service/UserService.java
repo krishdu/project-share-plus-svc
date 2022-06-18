@@ -45,6 +45,11 @@ public class UserService  implements IUserService {
         try {
             UserEntity userEntity = new UserEntity();
             BeanUtils.copyProperties(user, userEntity);
+            if(user.getAvatarFile() != null && !user.getAvatarFile().equalsIgnoreCase(null)) {
+                userEntity.setAvatar(user.getAvatarFile());
+            }else{
+                userEntity.setAvatar(null);
+            }
             userEntity = _userRepository.save(userEntity);
             user.setUserId(userEntity.getUserId());
             user.setCreateDate(userEntity.getCreateDate());

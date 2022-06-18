@@ -29,6 +29,7 @@ public class UserEntity {
     private String password;
 
     @Column(nullable = true)
+    @Lob
     private String avatar;
 
     @OneToMany(fetch = FetchType.LAZY, mappedBy = "user")

@@ -45,6 +45,8 @@ public class ProjectService  implements IProjectService {
             postEntity = _postRepository.save(postEntity);
             post.setPostId(postEntity.getPostId());
             post.setFile(null);
+            post.setAvatar(postEntity.getUser().getAvatar());
+            post.setCreateDate(postEntity.getCreateDate());
             post.setImage(postEntity.getImage());
 
         } catch (Exception e) {
